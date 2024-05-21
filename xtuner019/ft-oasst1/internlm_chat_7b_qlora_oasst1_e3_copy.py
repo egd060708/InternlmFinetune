@@ -15,7 +15,8 @@ from xtuner.dataset.collate_fns import default_collate_fn
 from xtuner.dataset.map_fns import oasst1_map_fn, template_map_fn_factory
 from xtuner.engine import DatasetInfoHook, EvaluateChatHook
 from xtuner.model import SupervisedFinetune
-from xtuner.utils import PROMPT_TEMPLATE
+# from xtuner.utils import PROMPT_TEMPLATE
+from templates import PROMPT_TEMPLATE, SYSTEM_TEMPLATE
 
 #######################################################################
 #                          PART 1  Settings                           #
@@ -24,7 +25,7 @@ from xtuner.utils import PROMPT_TEMPLATE
 pretrained_model_name_or_path = './internlm-chat-7b'
 
 # Data
-data_path = './openassistant-guanaco'
+data_path = './project-management'
 prompt_template = PROMPT_TEMPLATE.internlm_chat
 max_length = 2048
 pack_to_max_length = True
@@ -42,9 +43,10 @@ max_norm = 1  # grad clip
 
 # Evaluate the generation performance during the training
 evaluation_freq = 500
-SYSTEM = ''
+# system = SYSTEM_TEMPLATE.project_manager
+system = ''
 evaluation_inputs = [
-    '请给我介绍五个上海的景点', 'Please tell me five scenic spots in Shanghai'
+    '今天再过半小时我要去补办学生卡，然后明天下午我要去找 A 老师，星期三上午还要去体检。', 'In half an hour today I am going to get my student card renewed, and then tomorrow afternoon I am going to see Mr. A, and Wednesday morning I am going to get my physical.'
 ]
 
 #######################################################################
@@ -138,7 +140,7 @@ custom_hooks = [
         tokenizer=tokenizer,
         every_n_iters=evaluation_freq,
         evaluation_inputs=evaluation_inputs,
-        system=SYSTEM,
+        system=system,
         prompt_template=prompt_template)
 ]
 
